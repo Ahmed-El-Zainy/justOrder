@@ -24,10 +24,13 @@ the query it ran.
 
 1. [The detail that decides whether this works](#the-detail-that-decides-whether-this-works)
 2. [Architecture](#architecture)
+
    2.1. [Three decisions that carry the accuracy](#three-decisions-that-carry-the-accuracy)
 3. [Running it](#running-it)
 4. [Evaluation](#evaluation)
+
    4.1. [Published scores](#published-scores)
+
    4.2. [Where the time goes](#where-the-time-goes)
 5. [What it does when it can't answer](#what-it-does-when-it-cant-answer)
 6. [Layout](#layout)
