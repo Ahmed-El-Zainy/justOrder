@@ -1,0 +1,383 @@
+{
+  "source_file": "PURCHASE ORDER DATA EXTRACT 2012-2015_0.csv",
+  "rows": 346018,
+  "distinct_purchase_orders": 200533,
+  "line_items_per_order": 1.73,
+  "negative_total_price_rows": 1438,
+  "creation_date_range": {
+    "from": "2012-07-02",
+    "to": "2015-06-30"
+  },
+  "fields": {
+    "acquisition_method": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 20
+    },
+    "acquisition_type": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 5
+    },
+    "calcard": {
+      "type": "bool",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 2
+    },
+    "class_code": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 2363
+    },
+    "class_title": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 2360
+    },
+    "classification_codes": {
+      "type": "string",
+      "null_count": 1017,
+      "null_rate": 0.0029,
+      "distinct": 46049
+    },
+    "commodity_title": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 13220
+    },
+    "creation_date": {
+      "type": "date",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 1015
+    },
+    "creation_month": {
+      "type": "int",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 12
+    },
+    "creation_quarter": {
+      "type": "int",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 4
+    },
+    "creation_quarter_label": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 12
+    },
+    "creation_year": {
+      "type": "int",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 4
+    },
+    "department_name": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 111
+    },
+    "department_name_normalized": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 111
+    },
+    "family_code": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 409
+    },
+    "family_title": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 411
+    },
+    "fiscal_quarter": {
+      "type": "int",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 4
+    },
+    "fiscal_quarter_label": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 12
+    },
+    "fiscal_year": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 3
+    },
+    "item_description": {
+      "type": "string",
+      "null_count": 45,
+      "null_rate": 0.0001,
+      "distinct": 200000
+    },
+    "item_name": {
+      "type": "string",
+      "null_count": 30,
+      "null_rate": 0.0001,
+      "distinct": 179996
+    },
+    "item_name_normalized": {
+      "type": "string",
+      "null_count": 30,
+      "null_rate": 0.0001,
+      "distinct": 163304
+    },
+    "location": {
+      "type": "string",
+      "null_count": 70110,
+      "null_rate": 0.2026,
+      "distinct": 3993
+    },
+    "lpa_number": {
+      "type": "string",
+      "null_count": 253673,
+      "null_rate": 0.7331,
+      "distinct": 1420
+    },
+    "normalized_unspsc": {
+      "type": "string",
+      "null_count": 1017,
+      "null_rate": 0.0029,
+      "distinct": 13553
+    },
+    "purchase_date": {
+      "type": "date",
+      "null_count": 17436,
+      "null_rate": 0.0504,
+      "distinct": 2268
+    },
+    "purchase_order_number": {
+      "type": "string",
+      "null_count": 0,
+      "null_rate": 0.0,
+      "distinct": 200000
+    },
+    "quantity": {
+      "type": "double",
+      "null_count": 30,
+      "null_rate": 0.0001,
+      "distinct": 6131
+    },
+    "requisition_number": {
+      "type": "string",
+      "null_count": 331649,
+      "null_rate": 0.9585,
+      "distinct": 5997
+    },
+    "segment_code": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 56
+    },
+    "segment_title": {
+      "type": "string",
+      "null_count": 3295,
+      "null_rate": 0.0095,
+      "distinct": 56
+    },
+    "sub_acquisition_method": {
+      "type": "string",
+      "null_count": 315122,
+      "null_rate": 0.9107,
+      "distinct": 16
+    },
+    "sub_acquisition_type": {
+      "type": "string",
+      "null_count": 277681,
+      "null_rate": 0.8025,
+      "distinct": 25
+    },
+    "supplier_code": {
+      "type": "string",
+      "null_count": 36,
+      "null_rate": 0.0001,
+      "distinct": 25239
+    },
+    "supplier_name": {
+      "type": "string",
+      "null_count": 36,
+      "null_rate": 0.0001,
+      "distinct": 24732
+    },
+    "supplier_name_normalized": {
+      "type": "string",
+      "null_count": 36,
+      "null_rate": 0.0001,
+      "distinct": 24463
+    },
+    "supplier_qualifications": {
+      "type": "string",
+      "null_count": 204273,
+      "null_rate": 0.5904,
+      "distinct": 278
+    },
+    "supplier_zip_code": {
+      "type": "string",
+      "null_count": 70110,
+      "null_rate": 0.2026,
+      "distinct": 3993
+    },
+    "total_price": {
+      "type": "double",
+      "null_count": 30,
+      "null_rate": 0.0001,
+      "distinct": 150305
+    },
+    "unit_price": {
+      "type": "double",
+      "null_count": 30,
+      "null_rate": 0.0001,
+      "distinct": 128167
+    }
+  },
+  "enums": {
+    "acquisition_type": {
+      "NON-IT Goods": 215083,
+      "NON-IT Services": 68372,
+      "IT Goods": 50900,
+      "IT Services": 11516,
+      "IT Telecommunications": 147
+    },
+    "acquisition_method": {
+      "Informal Competitive": 82083,
+      "Statewide Contract": 63488,
+      "SB/DVBE Option": 38500,
+      "Services are specifically exempt by statute": 33045,
+      "State Programs": 27842,
+      "Fair and Reasonable": 25400,
+      "WSCA/Coop": 19478,
+      "Formal Competitive": 18479,
+      "Services are specifically exempt by policy": 11302,
+      "Emergency Purchase": 10186,
+      "NCB": 4439,
+      "CMAS": 3514,
+      "Master Service Agreement": 2309,
+      "Software License Program": 1949,
+      "Master Purchase/Price Agreement": 1528,
+      "CRP": 685,
+      "Special Category Request (SCR)": 677,
+      "Statement of Qualifications": 547,
+      "LCB": 488,
+      "State Price Schedule": 79
+    },
+    "sub_acquisition_type": {
+      "Personal Services": 16104,
+      "Services are specifically exempt by statute": 11854,
+      "Emergency Contract": 7913,
+      "Subvention and Local Assistance": 7048,
+      "Public Works": 4791,
+      "Expert Witneses": 3800,
+      "Interagency Agreements": 3261,
+      "Agreements with other governmental entities and public universities": 2051,
+      "Architectural and Engineering": 1785,
+      "Contracts with Local Governments": 1562,
+      "Nonprofit Organizations": 1345,
+      "Printing Services": 1246,
+      "Legal Services": 1167,
+      "Consulting Services": 1150,
+      "UC, CSU, Community Colleges, and foundations / auxiliaries": 1104,
+      "Convention and Conference Services": 489,
+      "Joint Power Agreement": 387,
+      "Federally Funded": 315,
+      "Hazardous Activities": 296,
+      "Memberships": 227,
+      "Commercial Office Moving Services": 191,
+      "Contracting for Students": 84,
+      "Elevator Maintenance": 83,
+      "Revenue Agreements": 61,
+      "Fiscal Intermediaries": 23
+    },
+    "fiscal_year": {
+      "2013-2014": 120636,
+      "2014-2015": 116537,
+      "2012-2013": 108845
+    },
+    "creation_quarter_label": {
+      "2014-Q2": 40549,
+      "2015-Q2": 38477,
+      "2013-Q2": 36503,
+      "2014-Q3": 29018,
+      "2013-Q3": 28443,
+      "2014-Q1": 26257,
+      "2013-Q4": 25387,
+      "2013-Q1": 24976,
+      "2015-Q1": 24653,
+      "2012-Q3": 24472,
+      "2014-Q4": 24389,
+      "2012-Q4": 22894
+    }
+  },
+  "samples": {
+    "department_name": [
+      "Administrative Law, Office of",
+      "African American Museum, California",
+      "Aging, Department of",
+      "Agricultural Labor Relations Board",
+      "Air Resources Board",
+      "Alcohol and Drug Programs, Department of",
+      "Alcoholic Beverage Control, Department of",
+      "Arts Council, California",
+      "Board of State and Community Corrections",
+      "Boating and Waterways, Department of",
+      "Building Standards Commission",
+      "Business Oversight",
+      "Business, Consumer Services and Housing Agency",
+      "CA Commission on Disability Access",
+      "California Department of Technology"
+    ],
+    "supplier_name": [
+      "1 +Fingerprints & Notary Services",
+      "1 CALL MATERIALS,LLC",
+      "1-Stop Translation USA, LLC",
+      "10 TANKER AIR CARRIER, LLC",
+      "10-8 Retrofit, Inc",
+      "10-A District Agricultural Association",
+      "101 Trailer Sales",
+      "1105 Media Inc.",
+      "1325 J Street, LLC",
+      "13th & T Venture Management Company",
+      "13th and Market Properties, LLC",
+      "150 Hegenberger Capital, LLC. dba Red Lion HOtel Oakland International Airport",
+      "15th & Market Investors, LP",
+      "1855 South Harbor Boulevard Drive Holdings LLC",
+      "1ST CALIFORNIA CONSTRUCTION, INC."
+    ],
+    "item_name": [
+      "! year Repair Service Advantage",
+      "\"0L3LWZZ1-ER1GS - Symc Backup Exec 2014 Server Win Per Server Renewal Essential",
+      "\"12RU Mobile rack equipped with locking front and rear doors. Top grommet Acryli",
+      "\"A.O. SMITH\" MOTOR 1/4 HP, 115V, 5.4 A",
+      "\"Advice for New Parents Guide\" Print Job",
+      "\"As Needed\"  Janitorial Services",
+      "\"As Needed\" Janitorial Serivces",
+      "\"Beach Buddy Adventure\" Fair Exhibirt",
+      "\"Bio-Medical Preventive Maintenance & Repair Services\"",
+      "\"Chiller Inspection & Preventive Maintenance\"",
+      "\"Confidential\" Stamp",
+      "\"Copy\" Self Inking Stamps",
+      "\"DAYTON\" MOTOR 1/3 HP, 1725 RPM, 115V, 1PH",
+      "\"Doc Sep\" + Bar Code Printing",
+      "\"Draft\" Stamp"
+    ]
+  }
+}

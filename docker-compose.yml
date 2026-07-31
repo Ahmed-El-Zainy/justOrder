@@ -1,0 +1,69 @@
+services:
+  mongo:
+    image: mongo:8
+    container_name: procurement-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-root_pw}
+      MONGO_APP_USER: ${MONGO_APP_USER:-procurement_app}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:-procurement_app_pw}
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: procurement-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Inside the compose network the host is `mongo`, not localhost.
+      MONGO_URI: mongodb://${MONGO_APP_USER:-procurement_app}:${MONGO_APP_PASSWORD:-procurement_app_pw}@mongo:27017/procurement?authSource=procurement
+      MONGO_DB: ${MONGO_DB:-procurement}
+      MONGO_COLLECTION: ${MONGO_COLLECTION:-purchase_orders}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_BASE_URL: ${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      LLM_MODEL: ${LLM_MODEL:-anthropic/claude-sonnet-5}
+      MAX_RESULT_ROWS: ${MAX_RESULT_ROWS:-200}
+      MAX_REPAIR_ATTEMPTS: ${MAX_REPAIR_ATTEMPTS:-3}
+      QUESTION_DEADLINE_S: ${QUESTION_DEADLINE_S:-30}
+      QUERY_TIMEOUT_MS: ${QUERY_TIMEOUT_MS:-15000}
+      FUZZY_MATCH_THRESHOLD: ${FUZZY_MATCH_THRESHOLD:-90}
+      FUZZY_AMBIGUOUS_FLOOR: ${FUZZY_AMBIGUOUS_FLOOR:-75}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:4200}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health').status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: procurement-frontend
+    restart: unless-stopped
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:

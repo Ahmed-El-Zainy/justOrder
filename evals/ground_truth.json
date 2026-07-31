@@ -1,0 +1,252 @@
+{
+  "total_line_items": 346018,
+  "distinct_orders": 200533,
+  "total_spend": 151243580498.2,
+  "negative_line_items": 1438,
+  "orders_by_quarter": {
+    "2012-Q3": 16264,
+    "2012-Q4": 14422,
+    "2013-Q1": 14819,
+    "2013-Q2": 20670,
+    "2013-Q3": 16479,
+    "2013-Q4": 14398,
+    "2014-Q1": 14642,
+    "2014-Q2": 23044,
+    "2014-Q3": 18352,
+    "2014-Q4": 14385,
+    "2015-Q1": 14713,
+    "2015-Q2": 21510
+  },
+  "line_items_by_quarter": {
+    "2012-Q3": 24472,
+    "2012-Q4": 22894,
+    "2013-Q1": 24976,
+    "2013-Q2": 36503,
+    "2013-Q3": 28443,
+    "2013-Q4": 25387,
+    "2014-Q1": 26257,
+    "2014-Q2": 40549,
+    "2014-Q3": 29018,
+    "2014-Q4": 24389,
+    "2015-Q1": 24653,
+    "2015-Q2": 38477
+  },
+  "spend_by_quarter": {
+    "2015-Q2": 28804820727.65,
+    "2013-Q1": 25788088561.68,
+    "2013-Q2": 19013469394.04,
+    "2014-Q2": 15618374092.74,
+    "2012-Q3": 12566134255.53,
+    "2013-Q3": 12554601092.33,
+    "2014-Q1": 10118001668.73,
+    "2015-Q1": 8289285224.84,
+    "2014-Q3": 5937650423.76,
+    "2012-Q4": 4544728728.17,
+    "2013-Q4": 4179698801.16,
+    "2014-Q4": 3828727527.57
+  },
+  "highest_spending_quarter": {
+    "quarter": "2015-Q2",
+    "spend": 28804820727.65
+  },
+  "top_items_by_frequency": [
+    {
+      "item": "medical supplies",
+      "count": 3839
+    },
+    {
+      "item": "contract",
+      "count": 3103
+    },
+    {
+      "item": "toner",
+      "count": 1918
+    },
+    {
+      "item": "ew",
+      "count": 1632
+    },
+    {
+      "item": "office supplies",
+      "count": 1570
+    },
+    {
+      "item": "expert witness",
+      "count": 1423
+    },
+    {
+      "item": "medical vocational training services",
+      "count": 1131
+    },
+    {
+      "item": "medical vocational training",
+      "count": 1111
+    },
+    {
+      "item": "dental supplies",
+      "count": 1072
+    },
+    {
+      "item": "tra",
+      "count": 918
+    }
+  ],
+  "top_departments_it_services": [
+    {
+      "department": "Social Services, Department of",
+      "spend": 1016701639.99
+    },
+    {
+      "department": "Franchise Tax Board",
+      "spend": 435249249.16
+    },
+    {
+      "department": "Health & Human Services Agency",
+      "spend": 365002586.52
+    },
+    {
+      "department": "Finance, Department of",
+      "spend": 270152836.1
+    },
+    {
+      "department": "Employment Development Department",
+      "spend": 239663571.99
+    },
+    {
+      "department": "Health Care Services, Department of",
+      "spend": 205103192.66
+    },
+    {
+      "department": "Correctional Health Care Services",
+      "spend": 162071469.82
+    },
+    {
+      "department": "Corrections and Rehabilitation, Department of",
+      "spend": 148711412.83
+    },
+    {
+      "department": "Child Support Services, Department of",
+      "spend": 148166838.4
+    },
+    {
+      "department": "California Department of Technology",
+      "spend": 144229977.1
+    }
+  ],
+  "top_suppliers_by_spend": [
+    {
+      "supplier": "Health Net Community Solutions, Inc.",
+      "spend": 13587059000.06
+    },
+    {
+      "supplier": "L.A. Care Health Plan",
+      "spend": 11160129000.04
+    },
+    {
+      "supplier": "Delta Dental of California",
+      "spend": 8172038064.03
+    },
+    {
+      "supplier": "Blue Cross of California Partnership Plan, Inc.",
+      "spend": 7176560939.15
+    },
+    {
+      "supplier": "Inland Empire Health Plan",
+      "spend": 5438790000.04
+    },
+    {
+      "supplier": "County of Los Angeles",
+      "spend": 4409260883.19
+    },
+    {
+      "supplier": "Fresno-Kings-Madera Regional Health Authority",
+      "spend": 3509792000.0
+    },
+    {
+      "supplier": "Health Plan of San Joaquin",
+      "spend": 3102765864.03
+    },
+    {
+      "supplier": "Ventura County",
+      "spend": 3029475475.1
+    },
+    {
+      "supplier": "Molina Healthcare of California Partner Plan, Inc.",
+      "spend": 3026911000.05
+    }
+  ],
+  "top_departments_by_spend": [
+    {
+      "department": "Health Care Services, Department of",
+      "spend": 99759350736.42
+    },
+    {
+      "department": "Public Health, Department of",
+      "spend": 5621707893.98
+    },
+    {
+      "department": "Social Services, Department of",
+      "spend": 5565328198.27
+    },
+    {
+      "department": "Corrections and Rehabilitation, Department of",
+      "spend": 4711857451.29
+    },
+    {
+      "department": "State Hospitals, Department of",
+      "spend": 4545650046.42
+    },
+    {
+      "department": "Transportation, Department of",
+      "spend": 4347882799.66
+    },
+    {
+      "department": "High Speed Rail Authority, California",
+      "spend": 3565361682.22
+    },
+    {
+      "department": "Water Resources, Department of",
+      "spend": 2790266200.9
+    },
+    {
+      "department": "Correctional Health Care Services",
+      "spend": 2641173667.9
+    },
+    {
+      "department": "Employment Development Department",
+      "spend": 1724960851.03
+    }
+  ],
+  "spend_by_acquisition_type": {
+    "NON-IT Services": 140630433996.44,
+    "NON-IT Goods": 4563452346.67,
+    "IT Services": 4461383710.8,
+    "IT Goods": 1574704064.35,
+    "IT Telecommunications": 13606379.94
+  },
+  "orders_by_year": {
+    "2012": 30665,
+    "2013": 66031,
+    "2014": 70100,
+    "2015": 36141
+  },
+  "monthly_spend_2014": {
+    "1": 521996259.94,
+    "2": 4302116700.37,
+    "3": 5293888708.42,
+    "4": 3422321431.35,
+    "5": 1158778421.46,
+    "6": 11037274239.93,
+    "7": 2495931781.95,
+    "8": 1920683472.45,
+    "9": 1521035169.36,
+    "10": 1249028210.39,
+    "11": 1741325210.62,
+    "12": 838374106.56
+  },
+  "calcard_orders": 3775,
+  "coverage": {
+    "from": "2012-07-02",
+    "to": "2015-06-30"
+  }
+}

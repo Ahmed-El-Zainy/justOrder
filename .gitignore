@@ -1,0 +1,41 @@
+# Secrets
+.env
+.env.local
+
+/.claude
+/kaggle_data
+/specs
+# Data. The raw Kaggle CSV is 156 MB — past GitHub's 100 MB file limit.
+# Regenerate with `uv run python -m data_pipeline.download`.
+# The data dictionary PDF/docx stay tracked: they document the schema for reviewers.
+kaggle_data/*.csv
+data/
+*.csv
+.specify
+!evals/**/*.csv
+
+# Assessment brief — kept local, not published
+assets/
+pure_req.md
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# Node / Angular
+node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Editors / OS
+.DS_Store
+.idea/
+*.swp
+
+# Spec Kit local state
+.specify/feature.json

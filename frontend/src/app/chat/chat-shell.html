@@ -1,0 +1,86 @@
+<div class="shell">
+  <header>
+    <h1>California Procurement Assistant</h1>
+    <p>
+      Ask about 346,018 purchase line items — 200,533 orders — placed by State of California
+      departments between July 2012 and June 2015.
+    </p>
+  </header>
+
+  <section class="thread">
+    @if (!messages().length) {
+      <div class="empty">
+        <h2>What would you like to know?</h2>
+        <div class="chips">
+          @for (suggestion of suggestions(); track suggestion.text) {
+            <button type="button" (click)="useSuggestion(suggestion.text)" [disabled]="busy()">
+              {{ suggestion.text }}
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    @for (message of messages(); track message.id) {
+      <article [class]="'bubble ' + message.role">
+        @if (message.role === 'user') {
+          <p class="text">{{ message.content }}</p>
+        } @else {
+          @if (message.pending && !message.content) {
+            <p class="phase">
+              <span class="dot"></span>{{ phaseLabel(message.phase) }}…
+            </p>
+          }
+
+          @if (message.content) {
+            <p class="text">{{ message.content }}</p>
+          }
+
+          @if (message.clarification?.length) {
+            <div class="candidates">
+              @for (candidate of message.clarification; track candidate.field) {
+                @for (value of candidate.values; track value) {
+                  <button type="button" (click)="useSuggestion(value)" [disabled]="busy()">
+                    {{ value }}
+                  </button>
+                }
+              }
+            </div>
+          }
+
+          @if (message.chart && message.rows?.length) {
+            <app-result-chart [spec]="message.chart!" [rows]="message.rows!" />
+          }
+
+          @if (message.rows?.length) {
+            <app-result-table [rows]="message.rows!" />
+          } @else if (message.derivation && !message.pending && message.derivation.pipeline.length) {
+            <p class="no-rows">The query ran and matched no records.</p>
+          }
+
+          @if (message.derivation && message.derivation.pipeline.length) {
+            <app-pipeline-panel [derivation]="message.derivation" />
+          }
+
+          @if (message.error) {
+            <p class="error">{{ message.error }}</p>
+          }
+        }
+      </article>
+    }
+  </section>
+
+  <footer>
+    <textarea
+      rows="1"
+      placeholder="Ask about orders, spending, departments, suppliers or items…"
+      [ngModel]="draft()"
+      (ngModelChange)="draft.set($event)"
+      (keydown.enter)="onEnter($event)"
+      [disabled]="busy()"
+    ></textarea>
+    <button type="button" class="send" (click)="send()" [disabled]="busy() || !draft().trim()">
+      {{ busy() ? 'Working…' : 'Ask' }}
+    </button>
+  </footer>
+</div>

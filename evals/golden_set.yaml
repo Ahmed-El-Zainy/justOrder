@@ -1,0 +1,219 @@
+# Golden question set.
+#
+# `expected` values are keys into evals/ground_truth.json, which is computed in
+# pandas straight from the source CSV. Nothing here hardcodes a number, so the
+# set stays correct if the dataset is ever reloaded, and the expected values
+# never come from the MongoDB path the agent uses (constitution Principle IV).
+#
+# match types:
+#   numeric  - the answer text must contain the expected figure, within tolerance
+#   contains - the answer text must contain every listed string
+#   absent   - the answer must NOT contain any listed string
+#   refusal  - the answer must decline or ask, and must contain no figure
+
+cases:
+  # --- counting: orders vs line items -------------------------------------
+  - id: orders_q3_2014
+    category: counting
+    question: How many orders were created in Q3 2014?
+    match: numeric
+    expected_path: orders_by_quarter.2014-Q3
+    tolerance: 0
+    note: >-
+      The load-bearing case. Counting documents rather than distinct purchase
+      orders returns 29,018 instead of 18,352.
+
+  - id: orders_2013
+    category: counting
+    question: How many purchase orders were created in 2013?
+    match: numeric
+    expected_path: orders_by_year.2013
+    tolerance: 0
+
+  - id: orders_calcard
+    category: counting
+    question: How many orders were placed using a CalCard?
+    match: numeric
+    expected_path: calcard_orders
+    tolerance: 0
+
+  - id: line_items_total
+    category: counting
+    question: How many line items are in the dataset in total?
+    match: numeric
+    expected_path: total_line_items
+    tolerance: 0
+
+  # --- ranking by period ---------------------------------------------------
+  - id: highest_quarter
+    category: ranking
+    question: Which quarter had the highest spending?
+    match: contains
+    expected_literal: ["2015-Q2"]
+
+  - id: highest_quarter_amount
+    category: ranking
+    question: Which quarter had the highest spending, and how much?
+    match: numeric
+    expected_path: highest_spending_quarter.spend
+    tolerance: 0.01
+
+  # --- item frequency ------------------------------------------------------
+  - id: top_items
+    category: ranking
+    question: What are the most frequently ordered line items?
+    match: contains
+    expected_literal: ["medical supplies"]
+
+  - id: top_item_count
+    category: ranking
+    question: How many times was the most frequently ordered item ordered?
+    match: numeric
+    expected_path: top_items_by_frequency.0.count
+    tolerance: 0
+
+  # --- aggregation by party -----------------------------------------------
+  - id: top_dept_it_services
+    category: aggregation
+    question: Which departments spent the most on IT services?
+    match: contains
+    expected_literal: ["Social Services"]
+
+  - id: top_dept_it_services_amount
+    category: aggregation
+    question: How much did the top-spending department spend on IT services?
+    match: numeric
+    expected_path: top_departments_it_services.0.spend
+    tolerance: 0.01
+
+  - id: top_supplier
+    category: aggregation
+    question: Which supplier received the most spending overall?
+    match: contains
+    expected_literal: ["Health Net"]
+
+  - id: top_department_overall
+    category: aggregation
+    question: Which department spent the most overall?
+    match: contains
+    expected_literal: ["Health Care Services"]
+
+  - id: spend_by_acq_type
+    category: aggregation
+    question: What was the total spend for IT Goods?
+    match: numeric
+    expected_path: spend_by_acquisition_type.IT Goods
+    tolerance: 0.01
+
+  # --- combined time and category filters ---------------------------------
+  - id: it_goods_2013_suppliers
+    category: combined_filter
+    question: Who were the top suppliers for IT Goods in 2013?
+    match: absent
+    expected_literal: ["couldn't build", "no matching records"]
+    note: >-
+      Combines a category filter with a time filter. Asserts the assistant
+      actually answers rather than failing; the figures themselves are covered
+      by the single-filter cases.
+
+  - id: monthly_2014
+    category: time_series
+    question: Show monthly spending in 2014.
+    match: contains
+    expected_literal: ["2014"]
+    note: >-
+      Checks the series is produced and described. The per-month figures are
+      verified in the rows, not in the prose, because a good summary of twelve
+      months names the extremes rather than reciting every value.
+
+  # --- credits: totals must be net (FR-012) --------------------------------
+  - id: credits_are_net
+    category: credits
+    question: What was the total spend across the whole dataset?
+    match: numeric
+    expected_path: total_spend
+    tolerance: 0.01
+    note: >-
+      Only correct if the 1,438 negative line items are included. Excluding them
+      inflates the total.
+
+  # --- data coverage (FR-015) ---------------------------------------------
+  - id: period_not_covered
+    category: coverage
+    question: How much was spent in Q1 2019?
+    match: refusal
+    expected_literal: ["2012", "2015"]
+    note: Must state the period is outside coverage, not return an empty result.
+
+  - id: period_covered_edge
+    category: coverage
+    question: What time period does this dataset cover?
+    match: contains
+    expected_literal: ["2012", "2015"]
+
+  # --- honest emptiness (FR-007) ------------------------------------------
+  - id: unknown_supplier
+    category: empty_result
+    question: How much did Ministry of Magic receive in orders?
+    match: refusal
+    expected_literal: []
+    note: Must report no matching records without inventing a figure.
+
+  # --- ambiguity (FR-014a) ------------------------------------------------
+  - id: ambiguous_department
+    category: ambiguity
+    question: How much did Corrections spend?
+    match: refusal
+    expected_literal: ["Corrections"]
+    note: Two departments genuinely match; the assistant must ask which.
+
+  # --- out of scope (FR-005) ----------------------------------------------
+  - id: off_topic
+    category: out_of_scope
+    question: What is the capital of France?
+    match: refusal
+    expected_literal: []
+
+  - id: off_topic_adjacent
+    category: out_of_scope
+    question: Should California switch procurement software vendors?
+    match: refusal
+    expected_literal: []
+
+  # --- multi-turn follow-ups (US2) ----------------------------------------
+  - id: followup_next_quarter
+    category: followup
+    turns:
+      - What was total spending in Q1 2014?
+      - What about Q2?
+    match: numeric
+    expected_path: spend_by_quarter.2014-Q2
+    tolerance: 0.01
+    note: Turn 2 must inherit the 2014 calendar frame.
+
+  - id: followup_breakdown
+    category: followup
+    turns:
+      - What was total spending in Q2 2014?
+      - Break that down by department
+    match: contains
+    expected_literal: ["Health Care Services"]
+
+  - id: followup_topic_change
+    category: followup
+    turns:
+      - What was total spending in Q2 2014?
+      - Who are the biggest suppliers overall?
+    match: contains
+    expected_literal: ["Health Net"]
+    note: >-
+      The Q2 2014 filter must NOT carry over. If it leaks, the top supplier
+      differs from the all-time answer.
+
+  - id: followup_ordinal
+    category: followup
+    turns:
+      - Which departments spent the most on IT services?
+      - Only the top three
+    match: contains
+    expected_literal: ["Social Services"]

@@ -1,0 +1,398 @@
+{
+  "collection": "purchase_orders",
+  "document_count": 346018,
+  "distinct_orders": 200533,
+  "grain": "line item",
+  "grain_warning": "Each document is ONE LINE ITEM, not one order. 346,018 documents resolve to 200,533 distinct purchase orders (1.73 line items per order on average). To count ORDERS you must count distinct purchase_order_number \u2014 for example [{'$group': {'_id': '$purchase_order_number'}}, {'$count': 'orders'}]. Counting documents instead overstates order counts by about 73%.",
+  "coverage": {
+    "from": "2012-07-02",
+    "to": "2015-06-30",
+    "fiscal_years": [
+      "2012-2013",
+      "2013-2014",
+      "2014-2015"
+    ],
+    "note": "Questions about periods outside this range cannot be answered from this data. Say the period is not covered rather than returning an empty result."
+  },
+  "fields": [
+    {
+      "name": "acquisition_method",
+      "type": "string",
+      "nullable": false,
+      "description": "How the purchase was made. Twenty values."
+    },
+    {
+      "name": "acquisition_type",
+      "type": "string",
+      "nullable": false,
+      "description": "Top-level purchase category. Five values."
+    },
+    {
+      "name": "calcard",
+      "type": "bool",
+      "nullable": false,
+      "description": "Boolean \u2014 whether a CalCard purchasing card was used."
+    },
+    {
+      "name": "class_code",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC class code."
+    },
+    {
+      "name": "class_title",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC class name."
+    },
+    {
+      "name": "classification_codes",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC classification code."
+    },
+    {
+      "name": "commodity_title",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC commodity name."
+    },
+    {
+      "name": "creation_date",
+      "type": "date",
+      "nullable": false,
+      "description": "Date the order was created."
+    },
+    {
+      "name": "creation_month",
+      "type": "int",
+      "nullable": false,
+      "description": "Calendar month of creation_date, 1-12."
+    },
+    {
+      "name": "creation_quarter",
+      "type": "int",
+      "nullable": false,
+      "description": "Calendar quarter of creation_date, 1-4."
+    },
+    {
+      "name": "creation_quarter_label",
+      "type": "string",
+      "nullable": false,
+      "description": "Calendar quarter as 'YYYY-Qn', e.g. '2014-Q3'. Use this for quarter questions unless the user says 'fiscal'. Precomputed \u2014 match it with equality, never recompute quarters from dates."
+    },
+    {
+      "name": "creation_year",
+      "type": "int",
+      "nullable": false,
+      "description": "Calendar year of creation_date."
+    },
+    {
+      "name": "department_name",
+      "type": "string",
+      "nullable": false,
+      "description": "Ordering State of California department. 111 distinct values."
+    },
+    {
+      "name": "department_name_normalized",
+      "type": "string",
+      "nullable": false,
+      "description": "Lowercased department_name, for grouping and matching."
+    },
+    {
+      "name": "family_code",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC family code."
+    },
+    {
+      "name": "family_title",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC family name."
+    },
+    {
+      "name": "fiscal_quarter",
+      "type": "int",
+      "nullable": false,
+      "description": "Quarter within the state fiscal year, 1-4. Q1 is Jul-Sep."
+    },
+    {
+      "name": "fiscal_quarter_label",
+      "type": "string",
+      "nullable": false,
+      "description": "Fiscal quarter as '2014-2015 Q1'. Use only when asked for fiscal."
+    },
+    {
+      "name": "fiscal_year",
+      "type": "string",
+      "nullable": false,
+      "description": "State fiscal year, e.g. '2014-2015'. Runs 1 July to 30 June."
+    },
+    {
+      "name": "item_description",
+      "type": "string",
+      "nullable": true,
+      "description": "Free-text item description."
+    },
+    {
+      "name": "item_name",
+      "type": "string",
+      "nullable": true,
+      "description": "Short item name. Over 80,000 distinct values."
+    },
+    {
+      "name": "item_name_normalized",
+      "type": "string",
+      "nullable": true,
+      "description": "Lowercased item_name. Group on this for 'most frequently ordered items'."
+    },
+    {
+      "name": "location",
+      "type": "string",
+      "nullable": true,
+      "description": "Delivery location. Absent on ~20% of rows."
+    },
+    {
+      "name": "lpa_number",
+      "type": "string",
+      "nullable": true,
+      "description": "Leveraged Procurement Agreement number. Absent on ~73% of rows."
+    },
+    {
+      "name": "normalized_unspsc",
+      "type": "string",
+      "nullable": true,
+      "description": "Normalized UNSPSC code."
+    },
+    {
+      "name": "purchase_date",
+      "type": "date",
+      "nullable": true,
+      "description": "Date of purchase. Absent on ~5% of rows."
+    },
+    {
+      "name": "purchase_order_number",
+      "type": "string",
+      "nullable": false,
+      "description": "Purchase order identifier. NOT unique \u2014 one order spans many line items. Count orders with $group on this field, never with a document count."
+    },
+    {
+      "name": "quantity",
+      "type": "double",
+      "nullable": true,
+      "description": "Units ordered."
+    },
+    {
+      "name": "requisition_number",
+      "type": "string",
+      "nullable": true,
+      "description": "Requisition identifier. Absent on ~96% of rows."
+    },
+    {
+      "name": "segment_code",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC segment code."
+    },
+    {
+      "name": "segment_title",
+      "type": "string",
+      "nullable": true,
+      "description": "UNSPSC segment name."
+    },
+    {
+      "name": "sub_acquisition_method",
+      "type": "string",
+      "nullable": true,
+      "description": "Finer method. Absent on ~91% of rows."
+    },
+    {
+      "name": "sub_acquisition_type",
+      "type": "string",
+      "nullable": true,
+      "description": "Finer category. Absent on ~80% of rows."
+    },
+    {
+      "name": "supplier_code",
+      "type": "string",
+      "nullable": true,
+      "description": "Vendor identifier. A string \u2014 leading zeros are meaningful."
+    },
+    {
+      "name": "supplier_name",
+      "type": "string",
+      "nullable": true,
+      "description": "Vendor receiving the order. 24,732 distinct values."
+    },
+    {
+      "name": "supplier_name_normalized",
+      "type": "string",
+      "nullable": true,
+      "description": "Lowercased supplier_name, for grouping and matching."
+    },
+    {
+      "name": "supplier_qualifications",
+      "type": "string",
+      "nullable": true,
+      "description": "Certifications such as SB or DVBE. Absent on ~59% of rows."
+    },
+    {
+      "name": "supplier_zip_code",
+      "type": "string",
+      "nullable": true,
+      "description": "Vendor postal code. Absent on ~20% of rows."
+    },
+    {
+      "name": "total_price",
+      "type": "double",
+      "nullable": true,
+      "description": "Line item total in USD. Sum this for spend questions. Includes 1,438 negative values representing credits and returns \u2014 include them so totals are net."
+    },
+    {
+      "name": "unit_price",
+      "type": "double",
+      "nullable": true,
+      "description": "Price per unit in USD."
+    }
+  ],
+  "vocabularies": {
+    "acquisition_type": [
+      "IT Goods",
+      "IT Services",
+      "IT Telecommunications",
+      "NON-IT Goods",
+      "NON-IT Services"
+    ],
+    "acquisition_method": [
+      "CMAS",
+      "CRP",
+      "Emergency Purchase",
+      "Fair and Reasonable",
+      "Formal Competitive",
+      "Informal Competitive",
+      "LCB",
+      "Master Purchase/Price Agreement",
+      "Master Service Agreement",
+      "NCB",
+      "SB/DVBE Option",
+      "Services are specifically exempt by policy",
+      "Services are specifically exempt by statute",
+      "Software License Program",
+      "Special Category Request (SCR)",
+      "State Price Schedule",
+      "State Programs",
+      "Statement of Qualifications",
+      "Statewide Contract",
+      "WSCA/Coop"
+    ],
+    "sub_acquisition_type": [
+      "Agreements with other governmental entities and public universities",
+      "Architectural and Engineering",
+      "Commercial Office Moving Services",
+      "Consulting Services",
+      "Contracting for Students",
+      "Contracts with Local Governments",
+      "Convention and Conference Services",
+      "Elevator Maintenance",
+      "Emergency Contract",
+      "Expert Witneses",
+      "Federally Funded",
+      "Fiscal Intermediaries",
+      "Hazardous Activities",
+      "Interagency Agreements",
+      "Joint Power Agreement",
+      "Legal Services",
+      "Memberships",
+      "Nonprofit Organizations",
+      "Personal Services",
+      "Printing Services",
+      "Public Works",
+      "Revenue Agreements",
+      "Services are specifically exempt by statute",
+      "Subvention and Local Assistance",
+      "UC, CSU, Community Colleges, and foundations / auxiliaries"
+    ],
+    "fiscal_year": [
+      "2012-2013",
+      "2013-2014",
+      "2014-2015"
+    ],
+    "creation_quarter_label": [
+      "2012-Q3",
+      "2012-Q4",
+      "2013-Q1",
+      "2013-Q2",
+      "2013-Q3",
+      "2013-Q4",
+      "2014-Q1",
+      "2014-Q2",
+      "2014-Q3",
+      "2014-Q4",
+      "2015-Q1",
+      "2015-Q2"
+    ]
+  },
+  "samples": {
+    "department_name": [
+      "Administrative Law, Office of",
+      "African American Museum, California",
+      "Aging, Department of",
+      "Agricultural Labor Relations Board",
+      "Air Resources Board",
+      "Alcohol and Drug Programs, Department of",
+      "Alcoholic Beverage Control, Department of",
+      "Arts Council, California",
+      "Board of State and Community Corrections",
+      "Boating and Waterways, Department of",
+      "Building Standards Commission",
+      "Business Oversight",
+      "Business, Consumer Services and Housing Agency",
+      "CA Commission on Disability Access",
+      "California Department of Technology"
+    ],
+    "supplier_name": [
+      "1 +Fingerprints & Notary Services",
+      "1 CALL MATERIALS,LLC",
+      "1-Stop Translation USA, LLC",
+      "10 TANKER AIR CARRIER, LLC",
+      "10-8 Retrofit, Inc",
+      "10-A District Agricultural Association",
+      "101 Trailer Sales",
+      "1105 Media Inc.",
+      "1325 J Street, LLC",
+      "13th & T Venture Management Company",
+      "13th and Market Properties, LLC",
+      "150 Hegenberger Capital, LLC. dba Red Lion HOtel Oakland International Airport",
+      "15th & Market Investors, LP",
+      "1855 South Harbor Boulevard Drive Holdings LLC",
+      "1ST CALIFORNIA CONSTRUCTION, INC."
+    ],
+    "item_name": [
+      "! year Repair Service Advantage",
+      "\"0L3LWZZ1-ER1GS - Symc Backup Exec 2014 Server Win Per Server Renewal Essential",
+      "\"12RU Mobile rack equipped with locking front and rear doors. Top grommet Acryli",
+      "\"A.O. SMITH\" MOTOR 1/4 HP, 115V, 5.4 A",
+      "\"Advice for New Parents Guide\" Print Job",
+      "\"As Needed\"  Janitorial Services",
+      "\"As Needed\" Janitorial Serivces",
+      "\"Beach Buddy Adventure\" Fair Exhibirt",
+      "\"Bio-Medical Preventive Maintenance & Repair Services\"",
+      "\"Chiller Inspection & Preventive Maintenance\"",
+      "\"Confidential\" Stamp",
+      "\"Copy\" Self Inking Stamps",
+      "\"DAYTON\" MOTOR 1/3 HP, 1725 RPM, 115V, 1PH",
+      "\"Doc Sep\" + Bar Code Printing",
+      "\"Draft\" Stamp"
+    ]
+  },
+  "conventions": [
+    "Spend means the sum of total_price. Include negative values (credits and returns) so totals are net.",
+    "calcard is a BOOLEAN. Match {'calcard': true}, never the string 'YES'.",
+    "'IT Services', 'IT Goods', 'NON-IT Goods', 'NON-IT Services' and 'IT Telecommunications' are acquisition_type values, not item names. A question about spending on IT services filters acquisition_type, not item_name.",
+    "An unqualified quarter means a CALENDAR quarter \u2014 match creation_quarter_label such as '2014-Q3'. Only use fiscal_quarter_label when the user says 'fiscal'.",
+    "'Most frequently ordered' ranks by how many line items name the item; group on item_name_normalized.",
+    "Match enum values exactly as recorded, including 'NON-IT Goods' in uppercase and the misspelling 'Expert Witneses'.",
+    "Never use $lookup, $out, $merge, $where, or $function \u2014 they are rejected before execution."
+  ]
+}
