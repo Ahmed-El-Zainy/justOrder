@@ -40,6 +40,7 @@ the query it ran.
 
 ## The detail that decides whether this works
 
+
 Each row of the source CSV is a **line item, not an order**. 346,018 rows resolve to **200,533
 distinct purchase orders** — one order can carry up to 602 line items.
 
