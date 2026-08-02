@@ -20,6 +20,8 @@ the query it ran.
      [pipeline: $match creation_quarter_label "2014-Q3" → $group _id purchase_order_number → $count]
 ```
 
+**Demo:** [video walkthrough](https://drive.google.com/file/d/15tfUeigwQgleDInBm_hZnYOapUnB60vu/view?usp=sharing)
+
 ## Table of contents
 
 1. [The detail that decides whether this works](#the-detail-that-decides-whether-this-works)

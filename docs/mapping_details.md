@@ -1,14 +1,16 @@
-# Video walkthrough script
+<!--# Video walkthrough script-->
 
-**Hard limit: 8 minutes.** Anything longer is disqualified. Target 6:45 so a slow take or a stumble
+<!--**Hard limit: 8 minutes.** Anything longer is disqualified. Target 6:45 so a slow take or a stumble
 doesn't push you over. Every figure quoted below was re-verified against the actual files right
 before this script was written — don't round up from memory when you record; read the numbers off
-`evals/comparison.md` if you're ever unsure mid-take.
+`evals/comparison.md` if you're ever unsure mid-take.-->
 
-**Before you hit record:**
+<!--**Before you hit record:**-->
 
 ```bash
-docker compose up -d mongo    # or: docker-compose up -d mongo
+docker compose up -d mongo    # or: docker-compose up -d mongo     
+colima status 2>&1; echo "---list---"; colima list 2>&1; echo "---ls sock---"; ls -la /Users/ahmedmostafa/.colima/default/ 2>&1
+colima start 2>&1
 cd backend && uv run uvicorn app.main:app --port 8000     # terminal 2
 cd frontend && npx ng serve                                # terminal 3
 ```
@@ -21,7 +23,7 @@ the numbers from memory.
 
 ---
 
-## 0:00 – 0:35 · The detail the whole thing turns on
+<!--## 0:00 – 0:35 · The detail the whole thing turns on-->
 
 Open on the dataset, not the app.
 
@@ -36,9 +38,9 @@ Don't explain the architecture yet. Lead with the trap.
 
 ---
 
-## 0:35 – 3:00 · Demo
+<!--## 0:35 – 3:00 · Demo-->
 
-**Q1 — the trap itself (0:35)**
+<!--**Q1 — the trap itself (0:35)**-->
 Ask *"How many orders were created in Q3 2014?"*. While it streams, point at the live phase
 indicator. Answer: 18,352. Open the derivation panel ("How this was answered").
 
@@ -88,7 +90,7 @@ Three fast ones, back to back:
 
 ---
 
-## 3:00 – 4:30 · How it works
+<!--## 3:00 – 4:30 · How it works-->
 
 Show the agent graph diagram from `docs/agent.md`, then the code.
 
@@ -123,7 +125,7 @@ Show `pytest tests/test_guards.py -v` passing. Then the second, independent cont
 
 ---
 
-## 4:30 – 6:15 · Evaluation
+<!--## 4:30 – 6:15 · Evaluation-->
 
 > "I didn't want to just claim this works, so I measured it."
 
@@ -144,7 +146,7 @@ Show `evals/comparison.md`, or run `uv run python -m evals.run_eval --status`.
 > answers, not timeouts, and two of the three were follow-up questions. A smaller model runs out of
 > room exactly where conversation context matters most."
 
-**Latency, briefly (5:30)**
+<!--**Latency, briefly (5:30)**-->
 
 > "Each answer costs three sequential model calls — understand the question, write the query,
 > write the answer. I measured the identical call take 3 seconds once and 21 seconds a few minutes
@@ -153,7 +155,7 @@ Show `evals/comparison.md`, or run `uv run python -m evals.run_eval --status`.
 > realistic, and that gap is written down in the README, not hidden. What it's never waiting on is
 > the database — Mongo execution is under half a second of every answer you just watched."
 
-**What the eval found (5:55)**
+<!--**What the eval found (5:55)**-->
 
 > "The harness earned its keep — it caught four real bugs no code review found: a boolean field
 > matched against the literal string 'YES' instead of true. 'IT services' grounded to an item name
@@ -164,7 +166,7 @@ Show `evals/comparison.md`, or run `uv run python -m evals.run_eval --status`.
 
 ---
 
-## 6:15 – 6:45 · Close
+<!--## 6:15 – 6:45 · Close-->
 
 > "This was built spec-first — a constitution, a spec, a plan, and a task list, all in `specs/`,
 > written before any code. The automated cross-check between them caught a requirement with a
