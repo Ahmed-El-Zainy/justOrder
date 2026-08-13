@@ -92,6 +92,8 @@ MongoDB credential separately holds `read` only, so neither control depends on t
 
 **Prerequisites**: Docker, Python 3.13 + `uv`, Node 22+, and an OpenRouter API key.
 
+First time:
+
 ```bash
 cp .env.example .env          # then set OPENROUTER_API_KEY
 docker compose up -d mongo    # or: docker-compose up -d mongo
@@ -104,11 +106,30 @@ cd backend && uv run uvicorn app.main:app --port 8000
 cd frontend && npm install && npx ng serve
 ```
 
+Every time after that — the order matters, and the middle step is not optional:
+
+```bash
+colima status || colima start             # if you use Colima; skip on Docker Desktop
+docker compose up -d mongo                # "name already in use" here just means it's already up
+
+uv run python -m data_pipeline.load --verify   # confirm the data is actually there
+                                               # 0 documents? run the load again
+
+cd backend && uv run uvicorn app.main:app --port 8000   # start this AFTER the data exists
+cd frontend && npx ng serve
+```
+
 Frontend on http://localhost:4200, API on http://localhost:8000, `/health` reports document count
 and model reachability.
 
 `uv run python -m data_pipeline.load --verify` asserts exactly 346,018 documents, 200,533 distinct
 orders, 11 indexes, 6 vocabulary fields, typed doubles, and 1,438 surviving negative rows.
+
+The backend warms its grounding vocabulary **once**, at startup. Start it against an empty database
+and it logs `{"fields": 0, "values": 0, "event": "vocabulary.loaded"}` and stays that way for the
+life of the process — loading the data underneath a running server does not fix it. Full runbook,
+including the failure modes and how to tell them apart:
+[`docs/operations.md`](docs/operations.md#every-time-startup-sequence).
 
 ---
 

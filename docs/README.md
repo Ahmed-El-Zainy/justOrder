@@ -28,7 +28,7 @@ one-command setup, and published evaluation scores. Come here for depth.
 | [`api.md`](api.md) | The HTTP/SSE contract: every endpoint, the full event sequence, error codes, how to write a client |
 | [`frontend.md`](frontend.md) | The Angular app: the streaming client, components, the dev proxy |
 | [`evaluation.md`](evaluation.md) | The golden-set harness: independence guarantee, batching, published model comparison |
-| [`operations.md`](operations.md) | Running it locally, the config reference, reading `/health`, diagnosing a stuck request |
+| [`operations.md`](operations.md) | **Start here to run it**: first-time setup, the every-time startup sequence and why its order matters, the config reference, reading `/health`, diagnosing a stuck request |
 | [`decisions-and-bugs.md`](decisions-and-bugs.md) | Every real bug found by running the system, in the order it was found, plus deliberate spec deviations |
 | [`video-script.md`](video-script.md) | Timed script for the 5–8 minute deliverable walkthrough video |
 
@@ -40,6 +40,11 @@ index → `architecture.md` → `agent.md` → `evaluation.md`.
 **If you're extending the agent**: `agent.md`, then `decisions-and-bugs.md`
 for the traps already found (several look like reasonable code until you
 know what they broke).
+
+**If you're just trying to start it**: `operations.md`'s
+[every-time startup sequence](operations.md#every-time-startup-sequence) — the
+order is load-bearing, and two of the steps exist to catch failures that
+otherwise present as the system quietly answering wrongly.
 
 **If something's broken right now**: `operations.md`'s diagnosis table
 first; it links into the rest as needed.

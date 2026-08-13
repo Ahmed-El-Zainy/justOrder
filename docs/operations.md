@@ -9,32 +9,117 @@ Two servers, two terminals. This is the most common point of confusion —
 `GET /` on port 8000 will 404, because the API doesn't serve HTML at all;
 the UI lives on a separate Angular dev server.
 
-```bash
-# terminal 1 — MongoDB (only the database needs a container for local dev)
-docker compose up -d mongo     # or: docker-compose up -d mongo, see below
-
-# terminal 2 — backend
-cd backend
-uv run uvicorn app.main:app --port 8000
-
-# terminal 3 — frontend
-cd frontend
-npx ng serve
-```
-
-Then open **http://localhost:4200** — not 8000. The Angular dev server
-proxies `/api` and `/health` to `localhost:8000` (`frontend/proxy.conf.json`),
-so from the browser's perspective it's all one origin.
-
-First-time setup, before any of the above:
+### First-time setup (once per checkout)
 
 ```bash
 cp .env.example .env    # fill in OPENROUTER_API_KEY
-uv run python -m data_pipeline.download
-uv run python -m data_pipeline.profile
-uv run python -m data_pipeline.load
+uv run python -m data_pipeline.download   # ~163 MB CSV, skipped if present
+uv run python -m data_pipeline.profile    # writes the schema card
+cd frontend && npm install && cd ..
+```
+
+The download and profile steps are genuinely once-only: the CSV lands in
+`kaggle_data/` and the schema card in `data_pipeline/schema_card.json`, both
+of which persist in your working tree. **The database load is not
+once-only** — see the next section for why.
+
+### Every-time startup sequence
+
+Run these in order. The order is load-bearing, and every step has a check
+that fails loudly rather than producing a system that looks up but answers
+wrongly.
+
+**1. Start the Docker daemon.** With [Colima](https://github.com/abiosoft/colima),
+this stops on reboot or sleep and does not restart itself:
+
+```bash
+colima status || colima start
+```
+
+**2. Bring up MongoDB and wait for healthy.**
+
+```bash
+docker-compose up -d mongo      # or: docker compose up -d mongo
+docker ps --filter name=procurement-mongo    # want: Up … (healthy)
+```
+
+The container is declared `restart: unless-stopped`, so once the daemon is
+back it usually restarts *itself* before you get here. In that case
+`docker-compose up -d mongo` prints `Conflict. The container name
+"/procurement-mongo" is already in use` — **this is benign**: it means the
+container is already running. Confirm with `docker ps` and move on. Only if
+the container exists but is stopped do you need `docker start
+procurement-mongo`.
+
+**3. Verify the database actually has data.** Do not skip this:
+
+```bash
 uv run python -m data_pipeline.load --verify
 ```
+
+Expect `all checks passed`, asserting 346,018 documents, 200,533 distinct
+orders, 11 indexes, 6 vocabulary fields, a typed `double` `total_price`, and
+1,438 surviving negative rows. If it reports 0 documents, load it:
+
+```bash
+uv run python -m data_pipeline.load       # drops and reloads, then verifies
+```
+
+The load takes a few minutes and needs the **admin** credential, which it
+uses by default (`data_pipeline/load.py`) — it's the only part of the project
+that writes.
+
+**4. Start the backend — only after step 3 passes.**
+
+```bash
+cd backend && uv run uvicorn app.main:app --port 8000
+```
+
+Watch the startup lines. `vocabulary.loaded` must report non-zero:
+
+```json
+{"fields": 6, "values": 176, "event": "vocabulary.loaded"}
+```
+
+`{"fields": 0, "values": 0}` means the backend started against an empty
+database — stop it, fix step 3, and start it again. See
+[Why the backend must start last](#why-the-backend-must-start-last).
+
+**5. Start the frontend.**
+
+```bash
+cd frontend && npx ng serve
+```
+
+**6. Confirm the whole stack before using it.**
+
+```bash
+curl -s localhost:8000/health | python3 -m json.tool
+```
+
+`document_count` must be `346018`, not `0`. Then open
+**http://localhost:4200** — not 8000. The Angular dev server proxies `/api`
+and `/health` to `localhost:8000` (`frontend/proxy.conf.json`), so from the
+browser's perspective it's all one origin.
+
+### Why the backend must start last
+
+The grounding vocabulary is warmed **once**, in the FastAPI lifespan
+(`backend/app/main.py`, calling `vocabulary.load()`), and a failure there is
+caught and logged as a warning rather than being fatal — deliberately, so a
+transient database problem doesn't prevent the process from starting at all.
+
+The consequence is that the cache never re-reads on its own. A backend
+started before the data was loaded holds an empty vocabulary for the entire
+life of the process, and **restarting the backend is the only fix** —
+loading the data underneath a running server does not repair it.
+
+That failure is quiet and easy to misread, because the database itself
+reconnects fine. Queries start returning rows again while entity grounding
+stays dead, so "Department of Consumer Affairs" silently fails to resolve to
+the stored `"Consumer Affairs, Department of"` and the assistant reports
+zero — the exact confidently-wrong answer that grounding exists to prevent
+(see [`docs/agent.md`](agent.md#entity-grounding)).
 
 ### `docker compose` vs. `docker-compose`
 
@@ -45,16 +130,38 @@ e.g. via Homebrew) works identically for this project — use whichever
 resolves on your machine; nothing here is written assuming one specific
 invocation.
 
-### Colima
+### Colima, and why the data does not always survive
 
 If you're running Docker via [Colima](https://github.com/abiosoft/colima)
-rather than Docker Desktop, `colima start` must be running before either
-`docker` or `docker-compose` will connect. A machine restart or sleep can
-stop it silently — `colima status` / `colima start` first if any `docker`
-command reports it can't reach the daemon. **The MongoDB data survives** in
-the named `mongo_data` volume across a Colima restart; only the running
-container needs to be brought back up (`docker-compose up -d mongo`), not the
-data reloaded.
+rather than Docker Desktop, the VM must be started before either `docker` or
+`docker-compose` will connect. A machine restart or sleep stops it silently,
+and the symptom is a connection error naming the socket:
+
+```
+failed to connect to the docker API at unix:///Users/…/.colima/default/docker.sock
+```
+
+The backend shows the same outage as a Mongo timeout, at startup and on every
+query:
+
+```
+localhost:27017: [Errno 61] Connect call failed ('127.0.0.1', 27017)
+```
+
+`colima status` / `colima start` is the fix in both cases.
+
+**The MongoDB data usually survives in the named `mongo_data` volume, but do
+not assume it.** If the volume is removed — `docker-compose down -v`, a
+Colima disk reset, or anything that recreates the volume — Compose creates a
+fresh empty one and the container comes back up attached to *that*. The
+collections still exist, because `scripts/mongo-init.js` recreates them on an
+empty data directory, so nothing about the container's state looks wrong:
+it's `Up (healthy)`, the app connects, pipelines validate and execute in tens
+of milliseconds, and every query returns zero rows.
+
+This is precisely why step 3 above is a required step rather than a
+first-time one. `--verify` distinguishes "empty database" from "correct
+database" in about a second; the UI does not.
 
 ## Reading `/health`
 
@@ -75,8 +182,8 @@ true — the response tells you which:
 
 | Symptom in the payload | Meaning | Fix |
 |---|---|---|
-| `mongo.connected: false` | Can't reach MongoDB at all | Is the container running? `docker ps`. Is Colima up? |
-| `mongo.connected: true`, `document_count: 0` | Mongo is fine, but the collection is empty | `uv run python -m data_pipeline.load` was never run |
+| `mongo.connected: false` | Can't reach MongoDB at all | Is the container running? `docker ps`. Is Colima up? `colima status` |
+| `mongo.connected: true`, `document_count: 0` | Mongo is fine, but the collection is empty | Either the load was never run, or the volume was recreated empty — `uv run python -m data_pipeline.load` |
 | `llm.reachable: false` | The model provider call failed | See "Diagnosing a stuck or failed question" below |
 
 The `document_count: 0` case is deliberately distinguished from a Mongo
@@ -193,6 +300,11 @@ In order of what to check:
 
 | Symptom | Likely cause | Where to look |
 |---|---|---|
+| `Connect call failed ('127.0.0.1', 27017)` at startup and on every query | The Docker daemon is down, so the Mongo container isn't running | `colima status` / `colima start`, then `docker ps` — [Colima](#colima-and-why-the-data-does-not-always-survive) |
+| `docker-compose up -d mongo` says the container name is already in use | Benign — `restart: unless-stopped` already brought it back | `docker ps`; nothing to do if it shows `(healthy)` |
+| Every question answers "no results", `execute` logs `rows: 0` in a few ms, pipelines look correct | The database is empty — reachable but never loaded, or the volume was recreated | `uv run python -m data_pipeline.load --verify` — [step 3](#every-time-startup-sequence) |
+| Startup logs `{"fields": 0, "values": 0, "event": "vocabulary.loaded"}` | Backend started before the data existed; the cache is warmed once and never re-reads | Restart the backend — [Why the backend must start last](#why-the-backend-must-start-last) |
+| Department/supplier names never match, though other questions return rows | Same empty-vocabulary cache as above; the query path recovered, grounding did not | Restart the backend after confirming `--verify` passes |
 | Answers never appear, but the backend log shows `chat.answered` with a real `total_ms` | Client-side SSE parsing is broken | [`docs/decisions-and-bugs.md`](decisions-and-bugs.md#the-frontend-parsed-zero-sse-events) |
 | Every question errors immediately with `llm_unavailable` | Provider outage: rate limit or no credits | `/health`, or the raw error in the `llm.unavailable` log line |
 | Answers are slow (20–60s) but eventually arrive | Normal — three sequential model calls, provider latency varies | [The per-question deadline](#the-per-question-deadline) above |
